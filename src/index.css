@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  @apply bg-cream text-inkbrown font-body;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+h1,
+h2,
+h3,
+.font-heading {
+  font-family: "Great Vibes", cursive;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #fdf6ec;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4af37;
+  border-radius: 8px;
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/40 backdrop-blur-md border border-white/60 shadow-xl rounded-3xl;
+  }
+
+  .gold-btn {
+    @apply relative inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full text-cream font-body font-medium tracking-wide
+      bg-gold-dark bg-[linear-gradient(120deg,#A9861F_20%,#F4E5B2_45%,#D4AF37_60%,#A9861F_80%)]
+      bg-[length:200%_100%] animate-shimmer shadow-lg shadow-gold/30
+      hover:scale-105 transition-transform duration-300;
+  }
+
+  .section-title {
+    @apply font-heading text-5xl md:text-6xl text-gold-dark text-center mb-4;
+  }
+
+  .section-subtitle {
+    @apply text-center text-inkbrown/70 font-body text-sm md:text-base tracking-[0.2em] uppercase mb-10;
+  }
+
+  .divider-flourish {
+    @apply flex items-center justify-center gap-3 my-6 text-gold;
+  }
+  .divider-flourish::before,
+  .divider-flourish::after {
+    content: "";
+    @apply h-[1px] w-16 md:w-24 bg-gold/60;
+  }
+}
