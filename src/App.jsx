@@ -171,6 +171,7 @@ export default function App() {
         </AnimatePresence>
       </div>
 
+      {/* Passes revealed state so music begins right as the door opens */}
       <MusicPlayer revealed={revealed} />
     </>
   );
