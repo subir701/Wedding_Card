@@ -110,7 +110,7 @@ export default function ScratchCard({ isCardRevealed = false, onCardRevealed }) 
 
       <p className="section-subtitle !text-[10px] sm:!text-xs max-w-[220px] sm:max-w-sm mx-auto !mb-4 sm:!mb-6 leading-relaxed">
         {isCardRevealed
-          ? "Save the date to celebrate with us!"
+          ? "Two special evenings, countless memories. Can't wait to celebrate with you!"
           : "Scratch the card to unveil our wedding date"}
       </p>
 
