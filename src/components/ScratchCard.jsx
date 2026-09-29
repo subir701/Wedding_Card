@@ -8,17 +8,30 @@ export default function ScratchCard({ isCardRevealed = false, onCardRevealed }) 
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
   const isDrawing = useRef(false);
-  const [dims, setDims] = useState({ w: 340, h: 200 });
-  const { date, time, venue, day } = weddingConfig.scratchCardReveal;
+
+  // Proportional sizing calibrated for dual-event display
+  const [dims, setDims] = useState({ w: 350, h: 240 });
+
+  const {
+    weddingDate,
+    weddingDay,
+    weddingTime,
+    receptionDate,
+    receptionDay,
+    receptionTime,
+    venue,
+  } = weddingConfig.scratchCardReveal;
 
   useEffect(() => {
     const updateSize = () => {
       const isMobile = window.innerWidth < 640;
       const w = isMobile
-        ? Math.min(window.innerWidth * 0.68, 270)
-        : Math.min(window.innerWidth * 0.8, 340);
-      setDims({ w, h: w * (200 / 340) });
+        ? Math.min(window.innerWidth * 0.82, 310)
+        : Math.min(window.innerWidth * 0.8, 380);
+      const h = isMobile ? 245 : 255;
+      setDims({ w, h });
     };
+
     updateSize();
     window.addEventListener("resize", updateSize);
     return () => window.removeEventListener("resize", updateSize);
@@ -37,7 +50,7 @@ export default function ScratchCard({ isCardRevealed = false, onCardRevealed }) 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "rgba(59,43,32,0.85)";
-    ctx.font = `600 ${Math.round(dims.w / 19)}px Poppins, sans-serif`;
+    ctx.font = `600 ${Math.round(dims.w / 18)}px Poppins, sans-serif`;
     ctx.textAlign = "center";
     ctx.fillText("✨ Scratch to Reveal ✨", canvas.width / 2, canvas.height / 2);
   }, [dims, isCardRevealed]);
@@ -59,7 +72,6 @@ export default function ScratchCard({ isCardRevealed = false, onCardRevealed }) 
 
   const scratch = (e) => {
     if (!isDrawing.current || isCardRevealed) return;
-    // Stop swipe gestures from bubbling up to App.jsx
     if (e.stopPropagation) e.stopPropagation();
 
     const canvas = canvasRef.current;
@@ -67,8 +79,7 @@ export default function ScratchCard({ isCardRevealed = false, onCardRevealed }) 
     const { x, y } = getPos(e);
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    // Larger scratch radius so user clears it quickly
-    ctx.arc(x, y, Math.max(26, dims.w / 10), 0, Math.PI * 2);
+    ctx.arc(x, y, Math.max(26, dims.w / 9.5), 0, Math.PI * 2);
     ctx.fill();
     checkRevealPercentage();
   };
@@ -82,7 +93,6 @@ export default function ScratchCard({ isCardRevealed = false, onCardRevealed }) 
       if (pixels[i] === 0) cleared++;
     }
     const total = pixels.length / (4 * 30);
-    // Lowered threshold to 28% for effortless reveal
     if (cleared / total > 0.28) {
       if (onCardRevealed) onCardRevealed();
       fireConfetti();
@@ -103,47 +113,95 @@ export default function ScratchCard({ isCardRevealed = false, onCardRevealed }) 
   };
 
   return (
-    <ScrollFade className="w-full flex flex-col items-center justify-center px-6 py-8">
-      <h2 className="section-title !text-3xl sm:!text-4xl md:!text-6xl mt-4 sm:mt-0">
-        Our Big Day
+    <ScrollFade className="w-full flex flex-col items-center justify-center px-6 py-6">
+      <h2 className="section-title !text-3xl sm:!text-4xl md:!text-6xl mt-2 sm:mt-0">
+        Our Big Days
       </h2>
 
-      <p className="section-subtitle !text-[10px] sm:!text-xs max-w-[220px] sm:max-w-sm mx-auto !mb-4 sm:!mb-6 leading-relaxed">
+      <p className="section-subtitle !text-[10px] sm:!text-xs max-w-[240px] sm:max-w-sm mx-auto !mb-3 sm:!mb-5 leading-relaxed">
         {isCardRevealed
-          ? "Save the date to celebrate with us!"
-          : "Scratch the card to unveil our wedding date"}
+          ? "Two special evenings, countless memories. Can't wait to celebrate with you!"
+          : "Scratch the card to unveil our celebration dates"}
       </p>
 
       <div
         ref={containerRef}
-        className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-gold/40 mx-auto"
+        className="relative rounded-3xl overflow-hidden shadow-2xl border-2 sm:border-[3px] border-gold/40 mx-auto"
         style={{ width: dims.w, height: dims.h }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-rosegold/30 to-gold/20 flex flex-col items-center justify-center text-center p-4">
-          <p className="font-heading text-2xl sm:text-3xl text-gold-dark">{date}</p>
-          <p className="text-xs sm:text-sm text-inkbrown/80 mt-1">{day} • {time}</p>
-          <p className="text-xs sm:text-sm text-inkbrown/70 mt-2 px-4">{venue}</p>
+        {/* REVEAL CONTENT */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#FFF9F2] via-[#FDF5E6] to-[#FAF0E1] flex flex-col items-center justify-between text-center py-4 px-4">
+          
+          {/* Event 1: Wedding */}
+          <div className="flex flex-col items-center">
+            <span className="text-[10px] tracking-[0.25em] uppercase font-semibold text-gold-dark/90 mb-0.5">
+              Wedding Ceremony
+            </span>
+            <p className="font-serif text-lg sm:text-xl text-inkbrown font-medium tracking-wide">
+              {weddingDate}
+            </p>
+            <p className="text-[11px] sm:text-xs text-inkbrown/70 tracking-wider font-light mt-0.5">
+              {weddingDay} &bull; {weddingTime}
+            </p>
+          </div>
+
+          {/* Minimalist Divider */}
+          <div className="w-28 h-[1px] bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+
+          {/* Event 2: Reception */}
+          <div className="flex flex-col items-center">
+            <span className="text-[10px] tracking-[0.25em] uppercase font-semibold text-gold-dark/90 mb-0.5">
+              Grand Reception
+            </span>
+            <p className="font-serif text-lg sm:text-xl text-inkbrown font-medium tracking-wide">
+              {receptionDate}
+            </p>
+            <p className="text-[11px] sm:text-xs text-inkbrown/70 tracking-wider font-light mt-0.5">
+              {receptionDay} &bull; {receptionTime}
+            </p>
+          </div>
+
+          {/* Shared Venue Footer */}
+          <div className="w-full pt-2 border-t border-gold/20">
+            <p className="text-[10px] sm:text-[11px] text-inkbrown/80 font-normal tracking-wide px-2">
+              📍 {venue}
+            </p>
+          </div>
         </div>
 
+        {/* Scratch Canvas Overlay */}
         {!isCardRevealed && (
           <canvas
             ref={canvasRef}
             width={dims.w}
             height={dims.h}
             className="absolute inset-0 w-full h-full cursor-pointer touch-none z-20"
-            onMouseDown={(e) => { isDrawing.current = true; scratch(e); }}
+            onMouseDown={(e) => {
+              isDrawing.current = true;
+              scratch(e);
+            }}
             onMouseMove={scratch}
             onMouseUp={() => (isDrawing.current = false)}
             onMouseLeave={() => (isDrawing.current = false)}
-            onTouchStart={(e) => { e.stopPropagation(); isDrawing.current = true; scratch(e); }}
-            onTouchMove={(e) => { e.stopPropagation(); scratch(e); }}
-            onTouchEnd={(e) => { e.stopPropagation(); isDrawing.current = false; }}
+            onTouchStart={(e) => {
+              e.stopPropagation();
+              isDrawing.current = true;
+              scratch(e);
+            }}
+            onTouchMove={(e) => {
+              e.stopPropagation();
+              scratch(e);
+            }}
+            onTouchEnd={(e) => {
+              e.stopPropagation();
+              isDrawing.current = false;
+            }}
           />
         )}
       </div>
 
       {isCardRevealed && (
-        <p className="mt-4 sm:mt-5 text-gold-dark font-heading text-xl sm:text-2xl text-center">
+        <p className="mt-3 sm:mt-4 text-gold-dark font-heading text-xl sm:text-2xl text-center">
           See you there! ✨
         </p>
       )}

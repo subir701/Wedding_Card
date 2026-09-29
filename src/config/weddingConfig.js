@@ -30,10 +30,13 @@ const weddingConfig = {
   weddingDateTime: "2026-12-12T20:00:00+05:30",
 
   scratchCardReveal: {
-    date: "25th November 2026",
-    time: "8:00 PM onwards",
+    weddingDate: "25th November 2026",
+    weddingDay: "Wednesday",
+    weddingTime: "8:00 PM onwards",
+    receptionDate: "27th November 2026",
+    receptionDay: "Friday",
+    receptionTime: "7:30 PM onwards",
     venue: "Abhinandan Palace, Mopka, Bilaspur",
-    day: "Wednesday",
   },
 
   venue: {
